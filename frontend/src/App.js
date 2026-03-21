@@ -7,6 +7,13 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import HeroSlidesManagement from './pages/HeroSlidesManagement';
+import CapabilitiesManagement from './pages/CapabilitiesManagement';
+import ProjectsManagement from './pages/ProjectsManagement';
+import ClientsManagement from './pages/ClientsManagement';
+import TestimonialsManagement from './pages/TestimonialsManagement';
+import ContactSubmissionsManagement from './pages/ContactSubmissionsManagement';
+import CompanyInfoManagement from './pages/CompanyInfoManagement';
 import AdminLayout from './components/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
@@ -47,13 +54,13 @@ function App() {
               }
             >
               <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="hero-slides" element={<div className="p-8"><h1 className="text-2xl font-bold">Hero Slides Management - Coming Soon</h1></div>} />
-              <Route path="capabilities" element={<div className="p-8"><h1 className="text-2xl font-bold">Capabilities Management - Coming Soon</h1></div>} />
-              <Route path="projects" element={<div className="p-8"><h1 className="text-2xl font-bold">Projects Management - Coming Soon</h1></div>} />
-              <Route path="clients" element={<div className="p-8"><h1 className="text-2xl font-bold">Clients Management - Coming Soon</h1></div>} />
-              <Route path="testimonials" element={<div className="p-8"><h1 className="text-2xl font-bold">Testimonials Management - Coming Soon</h1></div>} />
-              <Route path="contacts" element={<div className="p-8"><h1 className="text-2xl font-bold">Contact Submissions - Coming Soon</h1></div>} />
-              <Route path="company-info" element={<div className="p-8"><h1 className="text-2xl font-bold">Company Info - Coming Soon</h1></div>} />
+              <Route path="hero-slides" element={<HeroSlidesManagement />} />
+              <Route path="capabilities" element={<CapabilitiesManagement />} />
+              <Route path="projects" element={<ProjectsManagement />} />
+              <Route path="clients" element={<ClientsManagement />} />
+              <Route path="testimonials" element={<TestimonialsManagement />} />
+              <Route path="contacts" element={<ContactSubmissionsManagement />} />
+              <Route path="company-info" element={<CompanyInfoManagement />} />
             </Route>
           </Routes>
         </div>
