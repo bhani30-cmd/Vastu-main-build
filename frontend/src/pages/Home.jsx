@@ -1,32 +1,89 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HeroSlider from '../components/HeroSlider';
 import SectionHeader from '../components/SectionHeader';
-import { capabilities, projects, clients, testimonials } from '../data/mockData';
-import { useState } from 'react';
+import { publicAPI } from '../services/api';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Home = () => {
+  const [heroSlides, setHeroSlides] = useState([]);
+  const [capabilities, setCapabilities] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const categories = ['All', 'Industrial', 'Commercial', 'Institutional', 'Residential'];
 
-  const filteredProjects = selectedCategory === 'All'
-    ? projects
-    : projects.filter(project => project.category === selectedCategory);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      fetchProjects(selectedCategory);
+    }
+  }, [selectedCategory]);
+
+  const fetchData = async () => {
+    try {
+      const [slidesRes, capabilitiesRes, clientsRes, testimonialsRes] = await Promise.all([
+        publicAPI.getHeroSlides(),
+        publicAPI.getCapabilities(),
+        publicAPI.getClients(),
+        publicAPI.getTestimonials()
+      ]);
+      
+      setHeroSlides(slidesRes.data);
+      setCapabilities(capabilitiesRes.data);
+      setClients(clientsRes.data);
+      setTestimonials(testimonialsRes.data);
+      
+      await fetchProjects('All');
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+    }
+  };
+
+  const fetchProjects = async (category) => {
+    try {
+      const response = await publicAPI.getProjects(category === 'All' ? null : category);
+      setProjects(response.data);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  };
 
   const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    if (testimonials.length > 0) {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }
   };
 
   const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    if (testimonials.length > 0) {
+      setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
       {/* Hero Slider */}
-      <HeroSlider />
+      <HeroSlider slides={heroSlides} />
 
       {/* Corporate Overview Section */}
       <section className="bg-gray-900 py-20">
@@ -37,7 +94,7 @@ const Home = () => {
             <div className="relative">
               <div className="absolute -left-8 top-0 w-32 h-full bg-orange-500" />
               <img
-                src="https://images.unsplash.com/photo-1600313419152-c66124a3b727?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwxfHxpbmR1c3RyaWFsJTIwYnVpbGRpbmd8ZW58MHx8fHwxNzc0MTAwNzQwfDA&ixlib=rb-4.1.0&q=85"
+                src="https://images.unsplash.com/photo-1600313419152-c66124a3b727?crop=entropy&cs=srgb&fm=jpg&q=85"
                 alt="Corporate Building"
                 className="relative z-10 w-full h-96 object-cover shadow-2xl"
               />
@@ -157,7 +214,7 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             {capabilities.map((capability) => (
               <div
-                key={capability.id}
+                key={capability._id}
                 className="group cursor-pointer"
               >
                 <div className="overflow-hidden aspect-video mb-4">
@@ -200,9 +257,9 @@ const Home = () => {
 
           {/* Projects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {filteredProjects.map((project) => (
+            {projects.map((project) => (
               <div
-                key={project.id}
+                key={project._id}
                 className="group cursor-pointer"
               >
                 <div className="overflow-hidden aspect-video mb-4 shadow-lg">
@@ -231,7 +288,7 @@ const Home = () => {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mt-12">
             {clients.map((client) => (
               <div
-                key={client.id}
+                key={client._id}
                 className="bg-white border-t-4 border-orange-500 p-6 flex items-center justify-center hover:scale-105 transition-transform"
               >
                 <img
@@ -246,64 +303,72 @@ const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <SectionHeader orangeText="CLIENT" regularText="TESTIMONIALS" />
-          
-          <div className="relative max-w-4xl mx-auto mt-12">
-            <div className="bg-white p-12 shadow-xl relative">
-              <div className="flex flex-col items-center text-center">
-                <img
-                  src={testimonials[currentTestimonial].logo}
-                  alt={testimonials[currentTestimonial].company}
-                  className="h-16 mb-6"
-                />
-                <h4 className="text-xl font-bold text-gray-900 mb-1">
-                  {testimonials[currentTestimonial].name}
-                </h4>
-                <p className="text-sm text-gray-600 mb-1">
-                  {testimonials[currentTestimonial].position}
-                </p>
-                <p className="text-sm text-orange-500 font-semibold mb-6">
-                  {testimonials[currentTestimonial].company}
-                </p>
-                <p className="text-gray-700 leading-relaxed italic">
-                  "{testimonials[currentTestimonial].quote}"
-                </p>
+      {testimonials.length > 0 && (
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <SectionHeader orangeText="CLIENT" regularText="TESTIMONIALS" />
+            
+            <div className="relative max-w-4xl mx-auto mt-12">
+              <div className="bg-white p-12 shadow-xl relative">
+                <div className="flex flex-col items-center text-center">
+                  <img
+                    src={testimonials[currentTestimonial].logo}
+                    alt={testimonials[currentTestimonial].company}
+                    className="h-16 mb-6"
+                  />
+                  <h4 className="text-xl font-bold text-gray-900 mb-1">
+                    {testimonials[currentTestimonial].name}
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-1">
+                    {testimonials[currentTestimonial].position}
+                  </p>
+                  <p className="text-sm text-orange-500 font-semibold mb-6">
+                    {testimonials[currentTestimonial].company}
+                  </p>
+                  <p className="text-gray-700 leading-relaxed italic">
+                    "{testimonials[currentTestimonial].quote}"
+                  </p>
+                </div>
+
+                {/* Navigation Arrows */}
+                {testimonials.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevTestimonial}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition-all"
+                    >
+                      <ChevronLeft size={24} />
+                    </button>
+                    <button
+                      onClick={nextTestimonial}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition-all"
+                    >
+                      <ChevronRight size={24} />
+                    </button>
+                  </>
+                )}
               </div>
 
-              {/* Navigation Arrows */}
-              <button
-                onClick={prevTestimonial}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition-all"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              <button
-                onClick={nextTestimonial}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition-all"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-
-            {/* Dots Navigation */}
-            <div className="flex justify-center gap-2 mt-6">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    index === currentTestimonial
-                      ? 'bg-orange-500 w-8'
-                      : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                />
-              ))}
+              {/* Dots Navigation */}
+              {testimonials.length > 1 && (
+                <div className="flex justify-center gap-2 mt-6">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentTestimonial(index)}
+                      className={`w-3 h-3 rounded-full transition-all ${
+                        index === currentTestimonial
+                          ? 'bg-orange-500 w-8'
+                          : 'bg-gray-300 hover:bg-gray-400'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Contact CTA Section */}
       <section className="bg-orange-500 py-16">

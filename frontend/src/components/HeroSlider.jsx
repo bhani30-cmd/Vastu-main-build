@@ -1,35 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { heroSlides } from '../data/mockData';
 
-const HeroSlider = () => {
+const HeroSlider = ({ slides = [] }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
+    if (slides.length === 0) return;
+    
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides]);
+
+  if (slides.length === 0) {
+    return <div className="h-[600px] bg-gray-800 flex items-center justify-center text-white">Loading...</div>;
+  }
 
   const goToSlide = (index) => {
     setCurrentSlide(index);
   };
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
   return (
     <div className="relative h-[600px] overflow-hidden">
       {/* Slides */}
-      {heroSlides.map((slide, index) => (
+      {slides.map((slide, index) => (
         <div
-          key={slide.id}
+          key={slide._id}
           className={`absolute inset-0 transition-opacity duration-1000 ${
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}
@@ -73,9 +78,9 @@ const HeroSlider = () => {
 
       {/* Thumbnail Navigation */}
       <div className="absolute bottom-8 right-8 flex gap-2 z-10">
-        {heroSlides.map((slide, index) => (
+        {slides.map((slide, index) => (
           <button
-            key={slide.id}
+            key={slide._id}
             onClick={() => goToSlide(index)}
             className={`w-20 h-16 border-2 overflow-hidden transition-all ${
               index === currentSlide
