@@ -1,0 +1,44 @@
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Remove default margin */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* App container - DO NOT center align */
+.App {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Smooth transitions for interactive elements */
+button {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ff8c42;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ff7425;
+}
