@@ -1,8 +1,36 @@
-import React from 'react';
-import { Facebook, Twitter, Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Facebook, Twitter, Linkedin, Youtube, Mail, Phone, MapPin, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { publicAPI } from '../services/api';
+
+const QuoraIcon = () => (
+  <svg 
+    viewBox="0 0 24 24" 
+    width="18" 
+    height="18" 
+    fill="currentColor"
+  >
+    <path d="M12.738 18.701c-.831 0-1.416-.6-1.416-1.433 0-.778.576-1.407 1.398-1.407.84 0 1.434.629 1.434 1.407 0 .833-.603 1.433-1.416 1.433M14.548 9.444c1.474 0 2.681 1.198 2.681 2.681a2.674 2.674 0 0 1-2.681 2.681h-.033c.25.638.594 1.188.997 1.638h4.786c.447 0 .801-.36.801-.801V3.357a.801.801 0 0 0-.801-.801H3.357a.801.801 0 0 0-.801.801v12.286c0 .447.36.801.801.801h6.492c.015-.021.03-.042.046-.063-.609-.625-1.053-1.357-1.277-2.116a2.682 2.682 0 0 1-1.544-2.419c0-1.483 1.198-2.681 2.681-2.681h3.793zm-1.681 2.087c-.48 0-.87.39-.87.87s.39.87.87.87.87-.39.87-.87-.39-.87-.87-.87z"/>
+  </svg>
+);
 
 const Footer = () => {
+  const [companyInfo, setCompanyInfo] = useState(null);
+
+  useEffect(() => {
+    fetchCompanyInfo();
+  }, []);
+
+  const fetchCompanyInfo = async () => {
+    try {
+      const response = await publicAPI.getCompanyInfo();
+      setCompanyInfo(response.data);
+    } catch (error) {
+      console.error('Error fetching company info:', error);
+    }
+  };
+
+  const socialLinks = companyInfo?.social_links || {};
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -17,19 +45,37 @@ const Footer = () => {
             <p className="text-gray-400 text-sm leading-relaxed">
               One of the top Construction Companies in Northern India, having successfully completed over 100 building projects.
             </p>
-            <div className="flex gap-3 mt-6">
-              <a href="#" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors">
-                <Facebook size={18} />
-              </a>
-              <a href="#" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors">
-                <Twitter size={18} />
-              </a>
-              <a href="#" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors">
-                <Linkedin size={18} />
-              </a>
-              <a href="#" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors">
-                <Youtube size={18} />
-              </a>
+            <div className="flex gap-3 mt-6 flex-wrap">
+              {socialLinks.facebook && socialLinks.facebook !== '#' && (
+                <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="Facebook">
+                  <Facebook size={18} />
+                </a>
+              )}
+              {socialLinks.twitter && socialLinks.twitter !== '#' && (
+                <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="Twitter">
+                  <Twitter size={18} />
+                </a>
+              )}
+              {socialLinks.linkedin && socialLinks.linkedin !== '#' && (
+                <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="LinkedIn">
+                  <Linkedin size={18} />
+                </a>
+              )}
+              {socialLinks.youtube && socialLinks.youtube !== '#' && (
+                <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="YouTube">
+                  <Youtube size={18} />
+                </a>
+              )}
+              {socialLinks.instagram && socialLinks.instagram !== '#' && (
+                <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="Instagram">
+                  <Instagram size={18} />
+                </a>
+              )}
+              {socialLinks.quora && socialLinks.quora !== '#' && (
+                <a href={socialLinks.quora} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="Quora">
+                  <QuoraIcon />
+                </a>
+              )}
             </div>
           </div>
 

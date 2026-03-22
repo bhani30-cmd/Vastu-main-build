@@ -168,7 +168,9 @@ async def seed_database():
                 "facebook": "#",
                 "twitter": "#",
                 "linkedin": "#",
-                "youtube": "#"
+                "youtube": "#",
+                "instagram": "#",
+                "quora": "#"
             },
             "updated_at": datetime.utcnow()
         }

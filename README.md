@@ -456,6 +456,18 @@ http://localhost:8001/api/uploads/<filename>
 
 For production, implement cloud storage integration.
 
+### Social Media Integration
+
+The application supports 6 social media platforms:
+- Facebook
+- Twitter
+- LinkedIn
+- YouTube
+- Instagram
+- Quora
+
+Social media links can be managed through the admin panel at `/admin/company-info`. Links are dynamically displayed in the footer only when configured.
+
 ## 🔒 Security Considerations
 
 1. **Change Default Admin Password** - Immediately after first login

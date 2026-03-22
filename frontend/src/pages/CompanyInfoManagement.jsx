@@ -23,7 +23,9 @@ const CompanyInfoManagement = () => {
       facebook: '',
       twitter: '',
       linkedin: '',
-      youtube: ''
+      youtube: '',
+      instagram: '',
+      quora: ''
     }
   });
 
@@ -188,6 +190,30 @@ const CompanyInfoManagement = () => {
                     social_links: { ...formData.social_links, youtube: e.target.value } 
                   })}
                   placeholder="https://youtube.com/@yourchannel"
+                />
+              </div>
+              
+              <div>
+                <Label>Instagram</Label>
+                <Input
+                  value={formData.social_links?.instagram || ''}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    social_links: { ...formData.social_links, instagram: e.target.value } 
+                  })}
+                  placeholder="https://instagram.com/yourcompany"
+                />
+              </div>
+              
+              <div>
+                <Label>Quora</Label>
+                <Input
+                  value={formData.social_links?.quora || ''}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    social_links: { ...formData.social_links, quora: e.target.value } 
+                  })}
+                  placeholder="https://quora.com/profile/YourCompany"
                 />
               </div>
             </div>
