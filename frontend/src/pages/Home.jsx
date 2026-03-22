@@ -379,7 +379,18 @@ const Home = () => {
           <p className="text-white text-lg mb-8">
             Contact us today for a consultation and let's build your dream together.
           </p>
-          <button className="bg-white text-orange-500 px-8 py-3 rounded font-bold hover:bg-gray-100 transition-colors">
+          <button 
+            onClick={() => {
+              // Scroll to top and wait a bit, then the navbar component will handle it
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              // Trigger the contact form after a short delay
+              setTimeout(() => {
+                const sendQueryBtn = document.querySelector('[data-send-query-btn]');
+                if (sendQueryBtn) sendQueryBtn.click();
+              }, 500);
+            }}
+            className="bg-white text-orange-500 px-8 py-3 rounded font-bold hover:bg-gray-100 transition-colors"
+          >
             Send Query
           </button>
         </div>

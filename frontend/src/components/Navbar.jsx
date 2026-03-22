@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Phone, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Textarea } from './ui/textarea';
+import { toast } from 'sonner';
+import { publicAPI } from '../services/api';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+  const [submitting, setSubmitting] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +40,32 @@ const Navbar = () => {
     { name: 'CONTACT US', path: '/contact' }
   ];
 
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      await publicAPI.submitContact(contactForm);
+      toast.success('Thank you! Your message has been sent successfully.');
+      setContactDialogOpen(false);
+      setContactForm({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    } catch (error) {
+      toast.error('Failed to send message. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleLoginClick = () => {
+    navigate('/admin/login');
+  };
+
   return (
     <>
       {/* Top Bar */}
@@ -40,10 +82,20 @@ const Navbar = () => {
             </a>
           </div>
           <div className="flex gap-3">
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white text-xs px-4 py-1 h-7">
+            <Button 
+              size="sm" 
+              className="bg-orange-500 hover:bg-orange-600 text-white text-xs px-4 py-1 h-7"
+              onClick={() => setContactDialogOpen(true)}
+              data-send-query-btn
+            >
               SEND QUERY
             </Button>
-            <Button size="sm" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-800 text-xs px-4 py-1 h-7">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="border-white text-white hover:bg-white hover:text-gray-800 text-xs px-4 py-1 h-7"
+              onClick={handleLoginClick}
+            >
               LOGIN
             </Button>
           </div>
@@ -108,6 +160,84 @@ const Navbar = () => {
           </div>
         )}
       </nav>
+
+      {/* Contact Form Dialog */}
+      <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">Send Us a Query</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleContactSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="name">Full Name *</Label>
+                <Input
+                  id="name"
+                  value={contactForm.name}
+                  onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                  required
+                  placeholder="Enter your name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="email">Email Address *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={contactForm.email}
+                  onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                  required
+                  placeholder="your.email@example.com"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="phone">Phone Number *</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={contactForm.phone}
+                  onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                  required
+                  placeholder="+91-XXXXXXXXXX"
+                />
+              </div>
+              <div>
+                <Label htmlFor="subject">Subject *</Label>
+                <Input
+                  id="subject"
+                  value={contactForm.subject}
+                  onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
+                  required
+                  placeholder="What is your query about?"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="message">Message *</Label>
+              <Textarea
+                id="message"
+                value={contactForm.message}
+                onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                required
+                rows={5}
+                placeholder="Tell us about your project requirements..."
+              />
+            </div>
+
+            <Button 
+              type="submit" 
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold"
+              disabled={submitting}
+            >
+              {submitting ? 'Sending...' : 'Send Message'}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
