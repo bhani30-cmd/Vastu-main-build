@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 const ProjectsCommercial = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pageContent, setPageContent] = useState(null);
 
   useEffect(() => {
     fetchProjects();
@@ -13,8 +14,12 @@ const ProjectsCommercial = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await publicAPI.getProjects('Commercial');
-      setProjects(response.data);
+      const [projRes, pageRes] = await Promise.all([
+        publicAPI.getProjects('Commercial'),
+        publicAPI.getPageContent('projects-commercial').catch(() => null)
+      ]);
+      setProjects(projRes.data);
+      if (pageRes?.data) setPageContent(pageRes.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -37,10 +42,10 @@ const ProjectsCommercial = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center gap-4 mb-4">
             <Building size={48} />
-            <h1 className="text-5xl font-bold">Commercial Projects</h1>
+            <h1 className="text-5xl font-bold">{pageContent?.content?.hero_title || 'Commercial Projects'}</h1>
           </div>
           <p className="text-xl text-gray-300">
-            Building modern commercial spaces for growing businesses
+            {pageContent?.content?.hero_subtitle || 'Building modern commercial spaces for growing businesses'}
           </p>
         </div>
       </div>

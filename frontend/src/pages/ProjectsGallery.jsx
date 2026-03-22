@@ -12,6 +12,7 @@ const ProjectsGallery = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [gridCols, setGridCols] = useState(3);
+  const [pageContent, setPageContent] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,12 +21,16 @@ const ProjectsGallery = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await publicAPI.getProjects();
-      const data = response.data;
+      const [projRes, pageRes] = await Promise.all([
+        publicAPI.getProjects(),
+        publicAPI.getPageContent('projects').catch(() => null)
+      ]);
+      const data = projRes.data;
       setProjects(data);
       setFilteredProjects(data);
       const uniqueCats = ['All', ...new Set(data.map(p => p.category))];
       setCategories(uniqueCats);
+      if (pageRes?.data) setPageContent(pageRes.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -92,10 +97,10 @@ const ProjectsGallery = () => {
         <div className="relative max-w-7xl mx-auto px-4 py-20">
           <p className="text-orange-400 font-semibold tracking-widest uppercase text-sm mb-3">Our Portfolio</p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-            Project <span className="text-orange-500">Gallery</span>
+            {pageContent?.content?.hero_title || <>Project <span className="text-orange-500">Gallery</span></>}
           </h1>
           <p className="text-base md:text-lg text-gray-300 max-w-2xl">
-            Explore our portfolio of successfully delivered construction projects across Northern India.
+            {pageContent?.content?.hero_subtitle || 'Explore our portfolio of successfully delivered construction projects across Northern India.'}
           </p>
           <div className="mt-6 flex gap-6 text-sm">
             <div className="flex items-center gap-2">

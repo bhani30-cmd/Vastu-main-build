@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 const ProjectsOffice = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pageContent, setPageContent] = useState(null);
 
   useEffect(() => {
     fetchProjects();
@@ -13,8 +14,12 @@ const ProjectsOffice = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await publicAPI.getProjects('Office');
-      setProjects(response.data);
+      const [projRes, pageRes] = await Promise.all([
+        publicAPI.getProjects('Office'),
+        publicAPI.getPageContent('projects-office').catch(() => null)
+      ]);
+      setProjects(projRes.data);
+      if (pageRes?.data) setPageContent(pageRes.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -36,10 +41,10 @@ const ProjectsOffice = () => {
         <div className="max-w-7xl mx-auto px-4">
           <p className="text-orange-400 font-semibold tracking-widest uppercase text-sm mb-3">Projects</p>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-            Office / <span className="text-orange-500">Workspace</span>
+            {pageContent?.content?.hero_title || <>Office / <span className="text-orange-500">Workspace</span></>}
           </h1>
           <p className="text-base md:text-lg text-gray-300 max-w-2xl">
-            Modern office interiors, co-working spaces and corporate campuses designed for productivity.
+            {pageContent?.content?.hero_subtitle || 'Modern office interiors, co-working spaces and corporate campuses designed for productivity.'}
           </p>
         </div>
       </div>
