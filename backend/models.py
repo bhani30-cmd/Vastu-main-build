@@ -159,6 +159,11 @@ class Token(BaseModel):
     token_type: str
 
 
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
+
+
 # Company Info
 class CompanyInfoUpdate(BaseModel):
     company_name: Optional[str] = None

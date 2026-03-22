@@ -9,12 +9,19 @@ import {
   Users, 
   MessageSquare,
   Mail,
-  Settings
+  Settings,
+  Lock
 } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { toast } from 'sonner';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [pwForm, setPwForm] = useState({ current_password: '', new_password: '', confirm_password: '' });
+  const [pwLoading, setPwLoading] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -112,6 +119,77 @@ const AdminDashboard = () => {
               View Messages
             </Link>
           </div>
+        </div>
+
+        {/* Change Password */}
+        <div className="mt-8 bg-white rounded-lg shadow-md p-6" data-testid="change-password-section">
+          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Lock size={20} /> Change Password
+          </h2>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (pwForm.new_password !== pwForm.confirm_password) {
+                toast.error('New passwords do not match');
+                return;
+              }
+              if (pwForm.new_password.length < 6) {
+                toast.error('New password must be at least 6 characters');
+                return;
+              }
+              setPwLoading(true);
+              try {
+                await adminAPI.changePassword({
+                  current_password: pwForm.current_password,
+                  new_password: pwForm.new_password
+                });
+                toast.success('Password changed successfully');
+                setPwForm({ current_password: '', new_password: '', confirm_password: '' });
+              } catch (error) {
+                toast.error(error.response?.data?.detail || 'Failed to change password');
+              } finally {
+                setPwLoading(false);
+              }
+            }}
+            className="grid md:grid-cols-3 gap-4"
+            data-testid="change-password-form"
+          >
+            <div>
+              <Label>Current Password</Label>
+              <Input
+                type="password"
+                value={pwForm.current_password}
+                onChange={(e) => setPwForm({ ...pwForm, current_password: e.target.value })}
+                required
+                data-testid="current-password-input"
+              />
+            </div>
+            <div>
+              <Label>New Password</Label>
+              <Input
+                type="password"
+                value={pwForm.new_password}
+                onChange={(e) => setPwForm({ ...pwForm, new_password: e.target.value })}
+                required
+                data-testid="new-password-input"
+              />
+            </div>
+            <div>
+              <Label>Confirm New Password</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="password"
+                  value={pwForm.confirm_password}
+                  onChange={(e) => setPwForm({ ...pwForm, confirm_password: e.target.value })}
+                  required
+                  data-testid="confirm-password-input"
+                />
+                <Button type="submit" disabled={pwLoading} className="bg-orange-500 hover:bg-orange-600 shrink-0" data-testid="change-password-btn">
+                  {pwLoading ? 'Saving...' : 'Update'}
+                </Button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ from models import (
     ProjectCreate, ProjectUpdate,
     ClientCreate, ClientUpdate,
     TestimonialCreate, TestimonialUpdate,
-    CompanyInfoUpdate, AdminLogin, Token, AdminUserCreate
+    CompanyInfoUpdate, AdminLogin, Token, AdminUserCreate, PasswordChange
 )
 from auth import (
     get_current_user, get_password_hash, verify_password, create_access_token
@@ -53,6 +53,21 @@ async def get_current_admin_user(username: str = Depends(get_current_user)):
     user["_id"] = str(user["_id"])
     del user["password"]
     return user
+
+
+@router.put("/change-password")
+async def change_password(data: PasswordChange, username: str = Depends(get_current_user)):
+    user = await db.admin_users.find_one({"username": username})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if not verify_password(data.current_password, user["password"]):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    new_hash = get_password_hash(data.new_password)
+    await db.admin_users.update_one(
+        {"_id": user["_id"]},
+        {"$set": {"password": new_hash, "updated_at": datetime.now(timezone.utc)}}
+    )
+    return {"message": "Password changed successfully"}
 
 
 # Hero Slides Routes

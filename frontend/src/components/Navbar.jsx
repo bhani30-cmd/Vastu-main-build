@@ -114,7 +114,6 @@ const Navbar = () => {
                 <span className="text-3xl font-bold text-orange-500">VASTUNIRMANA</span>
                 <span className="text-3xl font-bold text-gray-600 ml-2">PROJECTS</span>
               </div>
-              <p className="text-xs text-gray-500 mt-1">ISO 9001 : 2015 | ISO 14001 : 2015 | ISO 45001 : 2018 Certified</p>
             </Link>
 
             {/* Desktop Navigation */}

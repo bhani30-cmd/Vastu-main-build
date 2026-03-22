@@ -37,6 +37,7 @@ export const adminAPI = {
   // Auth
   login: (credentials) => api.post('/admin/login', credentials),
   getMe: () => api.get('/admin/me'),
+  changePassword: (data) => api.put('/admin/change-password', data),
   
   // Dashboard
   getDashboardStats: () => api.get('/admin/dashboard-stats'),
