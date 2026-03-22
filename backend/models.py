@@ -70,6 +70,12 @@ class ProjectCreate(BaseModel):
     description: str
     client: str
     image: str
+    gallery_images: Optional[List[str]] = []
+    location: Optional[str] = ""
+    area: Optional[str] = ""
+    completion_date: Optional[str] = ""
+    highlights: Optional[List[str]] = []
+    scope: Optional[str] = ""
     is_featured: bool = False
     is_active: bool = True
 
@@ -80,6 +86,12 @@ class ProjectUpdate(BaseModel):
     description: Optional[str] = None
     client: Optional[str] = None
     image: Optional[str] = None
+    gallery_images: Optional[List[str]] = None
+    location: Optional[str] = None
+    area: Optional[str] = None
+    completion_date: Optional[str] = None
+    highlights: Optional[List[str]] = None
+    scope: Optional[str] = None
     is_featured: Optional[bool] = None
     is_active: Optional[bool] = None
 

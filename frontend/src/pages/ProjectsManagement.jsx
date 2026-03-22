@@ -21,10 +21,17 @@ const ProjectsManagement = () => {
     description: '',
     client: '',
     image: '',
+    gallery_images: [],
+    location: '',
+    area: '',
+    completion_date: '',
+    highlights: [],
+    scope: '',
     is_featured: false,
     is_active: true
   });
   const [uploading, setUploading] = useState(false);
+  const [highlightInput, setHighlightInput] = useState('');
 
   const categories = ['Industrial', 'Commercial', 'Institutional', 'Residential'];
 
@@ -85,6 +92,12 @@ const ProjectsManagement = () => {
       description: item.description,
       client: item.client,
       image: item.image,
+      gallery_images: item.gallery_images || [],
+      location: item.location || '',
+      area: item.area || '',
+      completion_date: item.completion_date || '',
+      highlights: item.highlights || [],
+      scope: item.scope || '',
       is_featured: item.is_featured,
       is_active: item.is_active
     });
@@ -105,14 +118,57 @@ const ProjectsManagement = () => {
 
   const resetForm = () => {
     setEditingItem(null);
+    setHighlightInput('');
     setFormData({
       title: '',
       category: 'Industrial',
       description: '',
       client: '',
       image: '',
+      gallery_images: [],
+      location: '',
+      area: '',
+      completion_date: '',
+      highlights: [],
+      scope: '',
       is_featured: false,
       is_active: true
+    });
+  };
+
+  const handleGalleryUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const response = await adminAPI.uploadFile(file);
+      setFormData({ ...formData, gallery_images: [...formData.gallery_images, response.data.url] });
+      toast.success('Gallery image uploaded');
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeGalleryImage = (index) => {
+    setFormData({
+      ...formData,
+      gallery_images: formData.gallery_images.filter((_, i) => i !== index)
+    });
+  };
+
+  const addHighlight = () => {
+    if (highlightInput.trim()) {
+      setFormData({ ...formData, highlights: [...formData.highlights, highlightInput.trim()] });
+      setHighlightInput('');
+    }
+  };
+
+  const removeHighlight = (index) => {
+    setFormData({
+      ...formData,
+      highlights: formData.highlights.filter((_, i) => i !== index)
     });
   };
 
@@ -130,7 +186,7 @@ const ProjectsManagement = () => {
               <Plus className="mr-2" size={20} /> Add New Project
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingItem ? 'Edit Project' : 'Add New Project'}</DialogTitle>
             </DialogHeader>
@@ -143,26 +199,28 @@ const ProjectsManagement = () => {
                   required
                 />
               </div>
-              <div>
-                <Label>Category</Label>
-                <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label>Client</Label>
-                <Input
-                  value={formData.client}
-                  onChange={(e) => setFormData({ ...formData, client: e.target.value })}
-                  required
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Category</Label>
+                  <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Client</Label>
+                  <Input
+                    value={formData.client}
+                    onChange={(e) => setFormData({ ...formData, client: e.target.value })}
+                    required
+                  />
+                </div>
               </div>
               <div>
                 <Label>Description</Label>
@@ -173,8 +231,43 @@ const ProjectsManagement = () => {
                   required
                 />
               </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Label>Location</Label>
+                  <Input
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    placeholder="e.g., Noida, UP"
+                  />
+                </div>
+                <div>
+                  <Label>Area</Label>
+                  <Input
+                    value={formData.area}
+                    onChange={(e) => setFormData({ ...formData, area: e.target.value })}
+                    placeholder="e.g., 100,000 sq ft"
+                  />
+                </div>
+                <div>
+                  <Label>Completion Date</Label>
+                  <Input
+                    value={formData.completion_date}
+                    onChange={(e) => setFormData({ ...formData, completion_date: e.target.value })}
+                    placeholder="e.g., 2024"
+                  />
+                </div>
+              </div>
               <div>
-                <Label>Image</Label>
+                <Label>Project Scope (detailed)</Label>
+                <Textarea
+                  value={formData.scope}
+                  onChange={(e) => setFormData({ ...formData, scope: e.target.value })}
+                  rows={3}
+                  placeholder="Detailed scope of the project..."
+                />
+              </div>
+              <div>
+                <Label>Main Image</Label>
                 <div className="flex gap-2">
                   <Input
                     type="file"
@@ -186,6 +279,53 @@ const ProjectsManagement = () => {
                     <img src={formData.image} alt="Preview" className="w-20 h-20 object-cover rounded" />
                   )}
                 </div>
+              </div>
+              <div>
+                <Label>Gallery Images</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleGalleryUpload}
+                  disabled={uploading}
+                />
+                {formData.gallery_images.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.gallery_images.map((img, i) => (
+                      <div key={i} className="relative">
+                        <img src={img} alt={`Gallery ${i + 1}`} className="w-16 h-16 object-cover rounded" />
+                        <button
+                          type="button"
+                          onClick={() => removeGalleryImage(i)}
+                          className="absolute -top-1 -right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center"
+                        >
+                          x
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div>
+                <Label>Highlights</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={highlightInput}
+                    onChange={(e) => setHighlightInput(e.target.value)}
+                    placeholder="Add a highlight..."
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addHighlight(); } }}
+                  />
+                  <Button type="button" onClick={addHighlight} variant="outline" className="shrink-0">Add</Button>
+                </div>
+                {formData.highlights.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.highlights.map((h, i) => (
+                      <span key={i} className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-xs flex items-center gap-1">
+                        {h}
+                        <button type="button" onClick={() => removeHighlight(i)} className="hover:text-red-600">x</button>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="flex gap-4">
                 <div className="flex items-center gap-2">

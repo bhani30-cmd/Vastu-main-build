@@ -40,6 +40,26 @@ async def get_projects(category: Optional[str] = None):
     return projects
 
 
+@router.get("/projects/{project_id}", response_model=dict)
+async def get_project_by_id(project_id: str):
+    try:
+        project = await db.projects.find_one({"_id": ObjectId(project_id), "is_active": True})
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid project ID")
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    project["_id"] = str(project["_id"])
+
+    # Get related projects (same category, exclude current)
+    related = await db.projects.find(
+        {"category": project["category"], "_id": {"$ne": ObjectId(project_id)}, "is_active": True}
+    ).limit(3).to_list(3)
+    for r in related:
+        r["_id"] = str(r["_id"])
+    project["related_projects"] = related
+    return project
+
+
 @router.get("/clients", response_model=List[dict])
 async def get_clients():
     clients = await db.clients.find({"is_active": True}).sort("order", 1).to_list(100)

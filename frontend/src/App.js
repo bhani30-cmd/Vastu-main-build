@@ -14,6 +14,7 @@ import ProjectsCommercial from './pages/ProjectsCommercial';
 import ProjectsOffice from './pages/ProjectsOffice';
 import ProjectsRetail from './pages/ProjectsRetail';
 import ProjectsGallery from './pages/ProjectsGallery';
+import ProjectDetail from './pages/ProjectDetail';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import HeroSlidesManagement from './pages/HeroSlidesManagement';
@@ -52,6 +53,7 @@ function App() {
                     <Route path="/projects/office" element={<ProjectsOffice />} />
                     <Route path="/projects/retail" element={<ProjectsRetail />} />
                     <Route path="/projects" element={<ProjectsGallery />} />
+                    <Route path="/projects/:projectId" element={<ProjectDetail />} />
                   </Routes>
                   <Footer />
                 </>

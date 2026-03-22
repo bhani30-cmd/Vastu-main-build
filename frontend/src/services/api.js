@@ -24,6 +24,7 @@ export const publicAPI = {
   getHeroSlides: () => api.get('/public/hero-slides'),
   getCapabilities: () => api.get('/public/capabilities'),
   getProjects: (category) => api.get('/public/projects', { params: { category } }),
+  getProjectById: (id) => api.get(`/public/projects/${id}`),
   getClients: () => api.get('/public/clients'),
   getTestimonials: () => api.get('/public/testimonials'),
   getCompanyInfo: () => api.get('/public/company-info'),

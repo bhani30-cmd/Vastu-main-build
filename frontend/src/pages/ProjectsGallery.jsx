@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { publicAPI } from '../services/api';
-import { X, ChevronLeft, ChevronRight, Maximize2, Grid3X3, LayoutGrid } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { X, ChevronLeft, ChevronRight, Maximize2, Grid3X3, LayoutGrid, ExternalLink } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ProjectsGallery = () => {
   const [projects, setProjects] = useState([]);
@@ -12,6 +12,7 @@ const ProjectsGallery = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [gridCols, setGridCols] = useState(3);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProjects();
@@ -167,7 +168,7 @@ const ProjectsGallery = () => {
               <div
                 key={project._id}
                 className="group relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer"
-                onClick={() => openLightbox(index)}
+                onClick={() => navigate(`/projects/${project._id}`)}
                 data-testid={`project-card-${index}`}
                 style={{ animationDelay: `${index * 60}ms` }}
               >
@@ -185,10 +186,18 @@ const ProjectsGallery = () => {
                       <p className="text-orange-300 text-xs">Client: {project.client}</p>
                     </div>
                   </div>
-                  {/* Expand icon */}
+                  {/* View detail icon */}
                   <div className="absolute top-3 right-3 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Maximize2 size={16} />
+                    <ExternalLink size={16} />
                   </div>
+                  {/* Lightbox icon */}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); openLightbox(index); }}
+                    className="absolute bottom-3 right-3 bg-black/50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-orange-500"
+                    data-testid={`lightbox-btn-${index}`}
+                  >
+                    <Maximize2 size={16} />
+                  </button>
                   {/* Category badge */}
                   <span className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                     {project.category}
