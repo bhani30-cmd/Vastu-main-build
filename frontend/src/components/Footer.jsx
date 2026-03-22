@@ -46,36 +46,60 @@ const Footer = () => {
               One of the top Construction Companies in Northern India, having successfully completed over 100 building projects.
             </p>
             <div className="flex gap-3 mt-6 flex-wrap">
-              {socialLinks.facebook && socialLinks.facebook !== '#' && (
-                <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="Facebook">
-                  <Facebook size={18} />
-                </a>
-              )}
-              {socialLinks.twitter && socialLinks.twitter !== '#' && (
-                <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="Twitter">
-                  <Twitter size={18} />
-                </a>
-              )}
-              {socialLinks.linkedin && socialLinks.linkedin !== '#' && (
-                <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="LinkedIn">
-                  <Linkedin size={18} />
-                </a>
-              )}
-              {socialLinks.youtube && socialLinks.youtube !== '#' && (
-                <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="YouTube">
-                  <Youtube size={18} />
-                </a>
-              )}
-              {socialLinks.instagram && socialLinks.instagram !== '#' && (
-                <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="Instagram">
-                  <Instagram size={18} />
-                </a>
-              )}
-              {socialLinks.quora && socialLinks.quora !== '#' && (
-                <a href={socialLinks.quora} target="_blank" rel="noopener noreferrer" className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" aria-label="Quora">
-                  <QuoraIcon />
-                </a>
-              )}
+              <a 
+                href={socialLinks.facebook || '#'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" 
+                aria-label="Facebook"
+              >
+                <Facebook size={18} />
+              </a>
+              <a 
+                href={socialLinks.twitter || '#'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" 
+                aria-label="Twitter"
+              >
+                <Twitter size={18} />
+              </a>
+              <a 
+                href={socialLinks.linkedin || '#'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" 
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={18} />
+              </a>
+              <a 
+                href={socialLinks.youtube || '#'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" 
+                aria-label="YouTube"
+              >
+                <Youtube size={18} />
+              </a>
+              <a 
+                href={socialLinks.instagram || '#'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" 
+                aria-label="Instagram"
+              >
+                <Instagram size={18} />
+              </a>
+              <a 
+                href={socialLinks.quora || '#'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="bg-orange-500 hover:bg-orange-600 p-2 rounded transition-colors" 
+                aria-label="Quora"
+              >
+                <QuoraIcon />
+              </a>
             </div>
           </div>
 
