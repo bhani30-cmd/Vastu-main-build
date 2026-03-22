@@ -41,6 +41,7 @@ const Navbar = () => {
       path: '/projects',
       hasDropdown: true,
       submenu: [
+        { name: 'All Projects', path: '/projects' },
         { name: 'Residential', path: '/projects/residential' },
         { name: 'Commercial', path: '/projects/commercial' },
         { name: 'Office/Workspace', path: '/projects/office' },
