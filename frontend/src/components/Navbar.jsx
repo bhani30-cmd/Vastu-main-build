@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Mail, Phone, Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Input } from './ui/input';
@@ -82,17 +82,7 @@ const Navbar = () => {
     <>
       {/* Top Bar */}
       <div className="bg-gray-800 text-white py-2 px-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center text-sm">
-          <div className="flex items-center gap-6">
-            <a href="mailto:office@vastunirmana.com" className="flex items-center gap-2 hover:text-orange-500 transition-colors">
-              <Mail size={16} />
-              <span className="hidden sm:inline">office@vastunirmana.com</span>
-            </a>
-            <a href="tel:+91-0120-2651155" className="flex items-center gap-2 hover:text-orange-500 transition-colors">
-              <Phone size={16} />
-              <span className="hidden sm:inline">+91-0120-2651155</span>
-            </a>
-          </div>
+        <div className="max-w-7xl mx-auto flex justify-end items-center text-sm">
           <div className="flex gap-3">
             <Button 
               size="sm" 
