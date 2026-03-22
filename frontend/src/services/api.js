@@ -27,7 +27,8 @@ export const publicAPI = {
   getClients: () => api.get('/public/clients'),
   getTestimonials: () => api.get('/public/testimonials'),
   getCompanyInfo: () => api.get('/public/company-info'),
-  submitContact: (data) => api.post('/public/contact', data)
+  submitContact: (data) => api.post('/public/contact', data),
+  getPageContent: (pageName) => api.get(`/public/pages/${pageName}`)
 };
 
 // Admin API calls
@@ -77,6 +78,12 @@ export const adminAPI = {
   // Company Info
   getCompanyInfo: () => api.get('/admin/company-info'),
   updateCompanyInfo: (data) => api.put('/admin/company-info', data),
+  
+  // Page Management
+  getPages: () => api.get('/admin/pages'),
+  getPage: (pageName) => api.get(`/admin/pages/${pageName}`),
+  createPage: (data) => api.post('/admin/pages', data),
+  updatePage: (pageName, data) => api.put(`/admin/pages/${pageName}`, data),
   
   // Upload
   uploadFile: (file) => {

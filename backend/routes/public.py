@@ -76,3 +76,12 @@ async def submit_contact_form(contact: ContactSubmissionCreate):
     contact_dict["_id"] = str(result.inserted_id)
     
     return {"message": "Contact form submitted successfully", "id": str(result.inserted_id)}
+
+
+@router.get("/pages/{page_name}", response_model=dict)
+async def get_page_content(page_name: str):
+    page = await db.page_contents.find_one({"page_name": page_name, "is_active": True})
+    if not page:
+        raise HTTPException(status_code=404, detail="Page not found")
+    page["_id"] = str(page["_id"])
+    return page

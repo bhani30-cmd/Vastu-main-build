@@ -337,6 +337,50 @@ async def update_company_info(info: CompanyInfoUpdate, username: str = Depends(g
     return updated_info
 
 
+# Page Content Management Routes
+@router.get("/pages", response_model=List[dict])
+async def get_all_pages(username: str = Depends(get_current_user)):
+    pages = await db.page_contents.find().to_list(100)
+    for page in pages:
+        page["_id"] = str(page["_id"])
+    return pages
+
+
+@router.get("/pages/{page_name}", response_model=dict)
+async def get_page_by_name(page_name: str, username: str = Depends(get_current_user)):
+    page = await db.page_contents.find_one({"page_name": page_name})
+    if not page:
+        raise HTTPException(status_code=404, detail="Page not found")
+    page["_id"] = str(page["_id"])
+    return page
+
+
+@router.post("/pages", response_model=dict)
+async def create_page(page: dict, username: str = Depends(get_current_user)):
+    page["created_at"] = datetime.utcnow()
+    page["updated_at"] = datetime.utcnow()
+    result = await db.page_contents.insert_one(page)
+    page["_id"] = str(result.inserted_id)
+    return page
+
+
+@router.put("/pages/{page_name}", response_model=dict)
+async def update_page(page_name: str, page: dict, username: str = Depends(get_current_user)):
+    page["updated_at"] = datetime.utcnow()
+    
+    result = await db.page_contents.update_one(
+        {"page_name": page_name},
+        {"$set": page}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Page not found")
+    
+    updated_page = await db.page_contents.find_one({"page_name": page_name})
+    updated_page["_id"] = str(updated_page["_id"])
+    return updated_page
+
+
 # File Upload Route
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...), username: str = Depends(get_current_user)):

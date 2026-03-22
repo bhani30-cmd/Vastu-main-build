@@ -164,6 +164,12 @@ async def seed_database():
             "address": "Noida, Delhi, Gurugram, Lucknow, Jaipur",
             "established_year": 1986,
             "iso_certifications": "ISO 9001 : 2015 | ISO 14001 : 2015 | ISO 45001 : 2018 Certified",
+            "map_location": {
+                "latitude": 28.5355,
+                "longitude": 77.3910,
+                "address": "Noida, Uttar Pradesh, India",
+                "zoom": 12
+            },
             "social_links": {
                 "facebook": "#",
                 "twitter": "#",
@@ -178,6 +184,64 @@ async def seed_database():
         print("✓ Company info created")
     else:
         print("✓ Company info already exists")
+    
+    # Seed page contents
+    existing_pages = await db.page_contents.count_documents({})
+    if existing_pages == 0:
+        pages = [
+            {
+                "page_name": "about",
+                "title": "About Vastunirmana",
+                "content": {
+                    "hero_title": "About Us",
+                    "hero_subtitle": "Building Excellence Since 1986",
+                    "sections": [
+                        {
+                            "title": "Our Story",
+                            "content": "Established in 1986, Vastunirmana Projects Pvt. Ltd. is one of the top construction companies in Northern India, with a presence across major cities such as Delhi, Noida, Gurugram, Lucknow, Jaipur, Kanpur, Faridabad, and beyond."
+                        },
+                        {
+                            "title": "Why Choose Us?",
+                            "content": "Our deep expertise in the construction industry, coupled with effective labor management, has enabled us to provide unparalleled civil construction services."
+                        }
+                    ]
+                },
+                "meta_description": "Learn about Vastunirmana Projects - Top construction company in Northern India since 1986",
+                "is_active": True,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            {
+                "page_name": "services",
+                "title": "Our Services",
+                "content": {
+                    "hero_title": "Construction Services",
+                    "hero_subtitle": "Comprehensive Solutions for All Your Construction Needs",
+                    "description": "We offer a wide range of construction services including excavation, piling, steel structure, RCC works, MEP, and more."
+                },
+                "meta_description": "Comprehensive construction services by Vastunirmana - Excavation, RCC, Steel Structure, MEP and more",
+                "is_active": True,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            {
+                "page_name": "contact",
+                "title": "Contact Us",
+                "content": {
+                    "hero_title": "Get In Touch",
+                    "hero_subtitle": "Let's Build Your Dream Project Together",
+                    "description": "Contact us for a consultation and quote for your construction project."
+                },
+                "meta_description": "Contact Vastunirmana Projects for your construction needs",
+                "is_active": True,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            }
+        ]
+        await db.page_contents.insert_many(pages)
+        print(f"✓ {len(pages)} page contents created")
+    else:
+        print(f"✓ Page contents already exist ({existing_pages} pages)")
     
     print("\n✅ Database seeding completed!")
     print("\n📝 Admin Credentials:")

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr, ConfigDict
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from datetime import datetime
 from bson import ObjectId
 
@@ -157,4 +157,21 @@ class CompanyInfoUpdate(BaseModel):
     address: Optional[str] = None
     established_year: Optional[int] = None
     iso_certifications: Optional[str] = None
+    map_location: Optional[Dict[str, Any]] = None
     social_links: Optional[Dict[str, str]] = None
+
+
+# Page Content Management
+class PageContentCreate(BaseModel):
+    page_name: str  # about, services, contact
+    title: str
+    content: Dict[str, Any]  # Flexible JSON structure for different page types
+    meta_description: Optional[str] = ""
+    is_active: bool = True
+
+
+class PageContentUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[Dict[str, Any]] = None
+    meta_description: Optional[str] = None
+    is_active: Optional[bool] = None
