@@ -1,6 +1,6 @@
 # Vastunirmana Construction Website
 
-A professional full-stack construction company website with a complete Content Management System (CMS). Built as a pixel-perfect replica of dynaconprojects.com with advanced admin capabilities.
+A professional full-stack construction company website with a complete Content Management System (CMS). Built as a pixel-perfect with advanced admin capabilities.
 
 ![Vastunirmana Website](https://img.shields.io/badge/Status-Production%20Ready-success)
 ![React](https://img.shields.io/badge/React-19.0.0-blue)
