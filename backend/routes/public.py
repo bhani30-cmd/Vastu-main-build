@@ -4,7 +4,7 @@ from models import ContactSubmissionCreate
 from typing import List, Optional
 import os
 from bson import ObjectId
-from datetime import datetime
+from datetime import datetime, timezone
 
 router = APIRouter(prefix="/api/public", tags=["public"])
 
@@ -67,10 +67,10 @@ async def get_company_info():
 
 @router.post("/contact", response_model=dict)
 async def submit_contact_form(contact: ContactSubmissionCreate):
-    contact_dict = contact.dict()
+    contact_dict = contact.model_dump()
     contact_dict["status"] = "new"
-    contact_dict["created_at"] = datetime.utcnow()
-    contact_dict["updated_at"] = datetime.utcnow()
+    contact_dict["created_at"] = datetime.now(timezone.utc)
+    contact_dict["updated_at"] = datetime.now(timezone.utc)
     
     result = await db.contact_submissions.insert_one(contact_dict)
     contact_dict["_id"] = str(result.inserted_id)

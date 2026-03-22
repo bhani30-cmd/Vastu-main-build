@@ -14,7 +14,7 @@ from auth import (
 from typing import List
 import os
 from bson import ObjectId
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import shutil
 from pathlib import Path
 
@@ -38,7 +38,7 @@ async def login(credentials: AdminLogin):
     # Update last login
     await db.admin_users.update_one(
         {"_id": user["_id"]},
-        {"$set": {"last_login": datetime.utcnow()}}
+        {"$set": {"last_login": datetime.now(timezone.utc)}}
     )
     
     access_token = create_access_token(data={"sub": user["username"]})
@@ -66,9 +66,9 @@ async def get_all_hero_slides(username: str = Depends(get_current_user)):
 
 @router.post("/hero-slides", response_model=dict)
 async def create_hero_slide(slide: HeroSlideCreate, username: str = Depends(get_current_user)):
-    slide_dict = slide.dict()
-    slide_dict["created_at"] = datetime.utcnow()
-    slide_dict["updated_at"] = datetime.utcnow()
+    slide_dict = slide.model_dump()
+    slide_dict["created_at"] = datetime.now(timezone.utc)
+    slide_dict["updated_at"] = datetime.now(timezone.utc)
     result = await db.hero_slides.insert_one(slide_dict)
     slide_dict["_id"] = str(result.inserted_id)
     return slide_dict
@@ -76,8 +76,8 @@ async def create_hero_slide(slide: HeroSlideCreate, username: str = Depends(get_
 
 @router.put("/hero-slides/{slide_id}", response_model=dict)
 async def update_hero_slide(slide_id: str, slide: HeroSlideUpdate, username: str = Depends(get_current_user)):
-    update_data = {k: v for k, v in slide.dict().items() if v is not None}
-    update_data["updated_at"] = datetime.utcnow()
+    update_data = {k: v for k, v in slide.model_dump().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc)
     
     result = await db.hero_slides.update_one(
         {"_id": ObjectId(slide_id)},
@@ -111,9 +111,9 @@ async def get_all_capabilities(username: str = Depends(get_current_user)):
 
 @router.post("/capabilities", response_model=dict)
 async def create_capability(capability: CapabilityCreate, username: str = Depends(get_current_user)):
-    capability_dict = capability.dict()
-    capability_dict["created_at"] = datetime.utcnow()
-    capability_dict["updated_at"] = datetime.utcnow()
+    capability_dict = capability.model_dump()
+    capability_dict["created_at"] = datetime.now(timezone.utc)
+    capability_dict["updated_at"] = datetime.now(timezone.utc)
     result = await db.capabilities.insert_one(capability_dict)
     capability_dict["_id"] = str(result.inserted_id)
     return capability_dict
@@ -121,8 +121,8 @@ async def create_capability(capability: CapabilityCreate, username: str = Depend
 
 @router.put("/capabilities/{capability_id}", response_model=dict)
 async def update_capability(capability_id: str, capability: CapabilityUpdate, username: str = Depends(get_current_user)):
-    update_data = {k: v for k, v in capability.dict().items() if v is not None}
-    update_data["updated_at"] = datetime.utcnow()
+    update_data = {k: v for k, v in capability.model_dump().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc)
     
     result = await db.capabilities.update_one(
         {"_id": ObjectId(capability_id)},
@@ -156,9 +156,9 @@ async def get_all_projects(username: str = Depends(get_current_user)):
 
 @router.post("/projects", response_model=dict)
 async def create_project(project: ProjectCreate, username: str = Depends(get_current_user)):
-    project_dict = project.dict()
-    project_dict["created_at"] = datetime.utcnow()
-    project_dict["updated_at"] = datetime.utcnow()
+    project_dict = project.model_dump()
+    project_dict["created_at"] = datetime.now(timezone.utc)
+    project_dict["updated_at"] = datetime.now(timezone.utc)
     result = await db.projects.insert_one(project_dict)
     project_dict["_id"] = str(result.inserted_id)
     return project_dict
@@ -166,8 +166,8 @@ async def create_project(project: ProjectCreate, username: str = Depends(get_cur
 
 @router.put("/projects/{project_id}", response_model=dict)
 async def update_project(project_id: str, project: ProjectUpdate, username: str = Depends(get_current_user)):
-    update_data = {k: v for k, v in project.dict().items() if v is not None}
-    update_data["updated_at"] = datetime.utcnow()
+    update_data = {k: v for k, v in project.model_dump().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc)
     
     result = await db.projects.update_one(
         {"_id": ObjectId(project_id)},
@@ -201,9 +201,9 @@ async def get_all_clients(username: str = Depends(get_current_user)):
 
 @router.post("/clients", response_model=dict)
 async def create_client(client: ClientCreate, username: str = Depends(get_current_user)):
-    client_dict = client.dict()
-    client_dict["created_at"] = datetime.utcnow()
-    client_dict["updated_at"] = datetime.utcnow()
+    client_dict = client.model_dump()
+    client_dict["created_at"] = datetime.now(timezone.utc)
+    client_dict["updated_at"] = datetime.now(timezone.utc)
     result = await db.clients.insert_one(client_dict)
     client_dict["_id"] = str(result.inserted_id)
     return client_dict
@@ -211,8 +211,8 @@ async def create_client(client: ClientCreate, username: str = Depends(get_curren
 
 @router.put("/clients/{client_id}", response_model=dict)
 async def update_client(client_id: str, client: ClientUpdate, username: str = Depends(get_current_user)):
-    update_data = {k: v for k, v in client.dict().items() if v is not None}
-    update_data["updated_at"] = datetime.utcnow()
+    update_data = {k: v for k, v in client.model_dump().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc)
     
     result = await db.clients.update_one(
         {"_id": ObjectId(client_id)},
@@ -246,9 +246,9 @@ async def get_all_testimonials(username: str = Depends(get_current_user)):
 
 @router.post("/testimonials", response_model=dict)
 async def create_testimonial(testimonial: TestimonialCreate, username: str = Depends(get_current_user)):
-    testimonial_dict = testimonial.dict()
-    testimonial_dict["created_at"] = datetime.utcnow()
-    testimonial_dict["updated_at"] = datetime.utcnow()
+    testimonial_dict = testimonial.model_dump()
+    testimonial_dict["created_at"] = datetime.now(timezone.utc)
+    testimonial_dict["updated_at"] = datetime.now(timezone.utc)
     result = await db.testimonials.insert_one(testimonial_dict)
     testimonial_dict["_id"] = str(result.inserted_id)
     return testimonial_dict
@@ -256,8 +256,8 @@ async def create_testimonial(testimonial: TestimonialCreate, username: str = Dep
 
 @router.put("/testimonials/{testimonial_id}", response_model=dict)
 async def update_testimonial(testimonial_id: str, testimonial: TestimonialUpdate, username: str = Depends(get_current_user)):
-    update_data = {k: v for k, v in testimonial.dict().items() if v is not None}
-    update_data["updated_at"] = datetime.utcnow()
+    update_data = {k: v for k, v in testimonial.model_dump().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc)
     
     result = await db.testimonials.update_one(
         {"_id": ObjectId(testimonial_id)},
@@ -293,7 +293,7 @@ async def get_all_contacts(username: str = Depends(get_current_user)):
 async def update_contact_status(contact_id: str, status: str, username: str = Depends(get_current_user)):
     result = await db.contact_submissions.update_one(
         {"_id": ObjectId(contact_id)},
-        {"$set": {"status": status, "updated_at": datetime.utcnow()}}
+        {"$set": {"status": status, "updated_at": datetime.now(timezone.utc)}}
     )
     
     if result.modified_count == 0:
@@ -324,8 +324,8 @@ async def get_company_info_admin(username: str = Depends(get_current_user)):
 
 @router.put("/company-info", response_model=dict)
 async def update_company_info(info: CompanyInfoUpdate, username: str = Depends(get_current_user)):
-    update_data = {k: v for k, v in info.dict().items() if v is not None}
-    update_data["updated_at"] = datetime.utcnow()
+    update_data = {k: v for k, v in info.model_dump().items() if v is not None}
+    update_data["updated_at"] = datetime.now(timezone.utc)
     
     result = await db.company_info.update_one({}, {"$set": update_data})
     
@@ -357,8 +357,8 @@ async def get_page_by_name(page_name: str, username: str = Depends(get_current_u
 
 @router.post("/pages", response_model=dict)
 async def create_page(page: dict, username: str = Depends(get_current_user)):
-    page["created_at"] = datetime.utcnow()
-    page["updated_at"] = datetime.utcnow()
+    page["created_at"] = datetime.now(timezone.utc)
+    page["updated_at"] = datetime.now(timezone.utc)
     result = await db.page_contents.insert_one(page)
     page["_id"] = str(result.inserted_id)
     return page
@@ -366,7 +366,7 @@ async def create_page(page: dict, username: str = Depends(get_current_user)):
 
 @router.put("/pages/{page_name}", response_model=dict)
 async def update_page(page_name: str, page: dict, username: str = Depends(get_current_user)):
-    page["updated_at"] = datetime.utcnow()
+    page["updated_at"] = datetime.now(timezone.utc)
     
     result = await db.page_contents.update_one(
         {"page_name": page_name},
@@ -395,8 +395,7 @@ async def upload_file(file: UploadFile = File(...), username: str = Depends(get_
         shutil.copyfileobj(file.file, buffer)
     
     # Return URL
-    backend_url = os.environ.get('REACT_APP_BACKEND_URL', 'http://localhost:8001')
-    file_url = f"{backend_url}/api/uploads/{unique_filename}"
+    file_url = f"/api/uploads/{unique_filename}"
     
     return {"url": file_url, "filename": unique_filename}
 
