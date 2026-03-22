@@ -158,7 +158,7 @@ async def seed_database():
         company_info = {
             "company_name": "Vastunirmana Projects Pvt. Ltd.",
             "tagline": "Building Dreams, Creating Landmarks",
-            "about_us": "Established in 1986, Vastunirmana Projects Pvt. Ltd. is one of the top construction companies in Northern India.",
+            "about_us": "Established in 1986, Vastunirmana Projects Pvt. Ltd. is a top construction companies in Northern India.",
             "email": "office@vastunirmana.com",
             "phone": "+91-0120-2651155",
             "address": "Noida, Delhi, Gurugram, Lucknow, Jaipur",
@@ -183,7 +183,16 @@ async def seed_database():
         await db.company_info.insert_one(company_info)
         print("✓ Company info created")
     else:
-        print("✓ Company info already exists")
+        # Ensure social_links include instagram and quora
+        info = await db.company_info.find_one()
+        social_links = info.get("social_links", {})
+        if "instagram" not in social_links or "quora" not in social_links:
+            social_links.setdefault("instagram", "#")
+            social_links.setdefault("quora", "#")
+            await db.company_info.update_one({}, {"$set": {"social_links": social_links}})
+            print("✓ Company info updated with instagram/quora links")
+        else:
+            print("✓ Company info already exists")
     
     # Seed page contents
     existing_pages = await db.page_contents.count_documents({})
