@@ -71,57 +71,20 @@ const AboutUs = () => {
         </div>
       </div>
 
-      {/* Content Sections */}
+      {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-16">
-        {pageContent?.content?.sections?.map((section, index) => (
-          <div key={index} className={`mb-12 ${index % 2 === 1 ? 'bg-gray-50 p-8 rounded-lg' : ''}`}>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{section.title}</h2>
-            <p className="text-lg text-gray-700 leading-relaxed">{section.content}</p>
-          </div>
-        ))}
-
-        {/* Default Content if no sections */}
-        {(!pageContent?.content?.sections || pageContent.content.sections.length === 0) && (
+        {pageContent?.content?.body ? (
+          <div
+            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-orange-500"
+            dangerouslySetInnerHTML={{ __html: pageContent.content.body }}
+          />
+        ) : (
           <>
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Story</h2>
-              <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                Established in 1986, Vastunirmana Projects Pvt. Ltd. is one of the top construction 
-                companies in Northern India, with a presence across major cities such as Delhi, Noida, 
-                Gurugram, Lucknow, Jaipur, Kanpur, Faridabad, and beyond, spanning Haryana, Rajasthan, 
-                Madhya Pradesh, and Uttar Pradesh.
-              </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Over the past three decades, we have proudly delivered numerous civil construction projects, 
-                ranging from industrial and residential developments to specialized structures.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 p-8 rounded-lg mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Us?</h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Our deep expertise in the construction industry, coupled with effective labor management, 
-                has enabled us to provide unparalleled civil construction services. This has cemented our 
-                reputation as one of the top civil contractors in Gurgaon, Delhi, Noida, NCR, Haryana, 
-                Uttar Pradesh, and Madhya Pradesh.
-              </p>
-            </div>
-
-            <div className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Health & Safety Commitment</h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                At Vastunirmana Projects, we prioritize the health and safety of our workforce and stakeholders. 
-                We have a team of dedicated safety officers and engineers who rigorously implement and monitor 
-                our Health & Safety policies.
-              </p>
-            </div>
-
-            <div className="bg-gray-50 p-8 rounded-lg">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Technology and Innovation</h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Leveraging cutting-edge technology and modern equipment, we aim to make the construction 
-                process as rewarding as the finished product. Our comprehensive design-and-build services 
-                reflect our commitment to delivering projects that align with our clients' visions.
+                Established in 1986, Vastunirmana Projects Pvt. Ltd. is one of the top construction
+                companies in Northern India.
               </p>
             </div>
           </>
