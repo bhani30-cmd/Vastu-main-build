@@ -211,11 +211,14 @@ Frontend will be available at: `http://localhost:3000`
 
 ### Default Admin Credentials
 
-**⚠️ IMPORTANT: Change these credentials after first login!**
+**⚠️ IMPORTANT: Change these credentials immediately after first login!**
 
+**For initial setup only:**
 - **URL:** `http://localhost:3000/admin/login`
 - **Username:** `admin`
 - **Password:** `admin123`
+
+**Security Note:** These default credentials are provided for initial setup only. You must change them immediately through the admin dashboard to secure your application.
 
 ### Admin Dashboard Features
 
