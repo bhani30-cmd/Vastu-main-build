@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Mail, Phone, Menu, X } from 'lucide-react';
+import { Mail, Phone, Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Input } from './ui/input';
@@ -12,6 +12,7 @@ import { publicAPI } from '../services/api';
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [projectsDropdownOpen, setProjectsDropdownOpen] = useState(false);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const [contactForm, setContactForm] = useState({
     name: '',
@@ -35,8 +36,18 @@ const Navbar = () => {
   const navLinks = [
     { name: 'HOME', path: '/' },
     { name: 'ABOUT US', path: '/about' },
-    { name: 'PROJECTS', path: '/projects' },
-    { name: 'OUR RESOURCES', path: '/resources' },
+    { 
+      name: 'PROJECTS', 
+      path: '/projects',
+      hasDropdown: true,
+      submenu: [
+        { name: 'Residential', path: '/projects/residential' },
+        { name: 'Commercial', path: '/projects/commercial' },
+        { name: 'Office/Workspace', path: '/projects/office' },
+        { name: 'Retail', path: '/projects/retail' }
+      ]
+    },
+    { name: 'SERVICES', path: '/services' },
     { name: 'CONTACT US', path: '/contact' }
   ];
 
@@ -118,15 +129,42 @@ const Navbar = () => {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`text-sm font-semibold transition-colors hover:text-orange-500 ${
-                    location.pathname === link.path ? 'text-orange-500' : 'text-gray-700'
-                  }`}
-                >
-                  {link.name}
-                </Link>
+                link.hasDropdown ? (
+                  <div 
+                    key={link.path} 
+                    className="relative"
+                    onMouseEnter={() => setProjectsDropdownOpen(true)}
+                    onMouseLeave={() => setProjectsDropdownOpen(false)}
+                  >
+                    <button className="text-sm font-semibold transition-colors hover:text-orange-500 flex items-center gap-1">
+                      {link.name}
+                      <ChevronDown size={16} />
+                    </button>
+                    {projectsDropdownOpen && (
+                      <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 z-50">
+                        {link.submenu.map((sublink) => (
+                          <Link
+                            key={sublink.path}
+                            to={sublink.path}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors"
+                          >
+                            {sublink.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`text-sm font-semibold transition-colors hover:text-orange-500 ${
+                      location.pathname === link.path ? 'text-orange-500' : 'text-gray-700'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                )
               ))}
             </div>
 
@@ -145,16 +183,34 @@ const Navbar = () => {
           <div className="lg:hidden bg-white border-t border-gray-200">
             <div className="px-4 py-4 space-y-3">
               {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block text-sm font-semibold transition-colors hover:text-orange-500 ${
-                    location.pathname === link.path ? 'text-orange-500' : 'text-gray-700'
-                  }`}
-                >
-                  {link.name}
-                </Link>
+                link.hasDropdown ? (
+                  <div key={link.path}>
+                    <div className="text-sm font-semibold text-gray-700 mb-2">{link.name}</div>
+                    <div className="pl-4 space-y-2">
+                      {link.submenu.map((sublink) => (
+                        <Link
+                          key={sublink.path}
+                          to={sublink.path}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="block text-sm text-gray-600 hover:text-orange-500"
+                        >
+                          {sublink.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block text-sm font-semibold transition-colors hover:text-orange-500 ${
+                      location.pathname === link.path ? 'text-orange-500' : 'text-gray-700'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                )
               ))}
             </div>
           </div>

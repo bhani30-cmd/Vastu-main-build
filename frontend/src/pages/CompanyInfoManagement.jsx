@@ -19,6 +19,12 @@ const CompanyInfoManagement = () => {
     address: '',
     established_year: 1986,
     iso_certifications: '',
+    map_location: {
+      latitude: 28.5355,
+      longitude: 77.3910,
+      address: 'Noida, Uttar Pradesh, India',
+      zoom: 12
+    },
     social_links: {
       facebook: '',
       twitter: '',
@@ -140,6 +146,68 @@ const CompanyInfoManagement = () => {
                 placeholder="ISO 9001 : 2015 | ISO 14001 : 2015"
               />
             </div>
+          </div>
+          
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-4">Map Location (for Contact Page)</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>Latitude</Label>
+                <Input
+                  type="number"
+                  step="any"
+                  value={formData.map_location?.latitude || ''}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    map_location: { ...formData.map_location, latitude: parseFloat(e.target.value) } 
+                  })}
+                  placeholder="28.5355"
+                />
+              </div>
+              
+              <div>
+                <Label>Longitude</Label>
+                <Input
+                  type="number"
+                  step="any"
+                  value={formData.map_location?.longitude || ''}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    map_location: { ...formData.map_location, longitude: parseFloat(e.target.value) } 
+                  })}
+                  placeholder="77.3910"
+                />
+              </div>
+              
+              <div className="md:col-span-2">
+                <Label>Map Address Display</Label>
+                <Input
+                  value={formData.map_location?.address || ''}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    map_location: { ...formData.map_location, address: e.target.value } 
+                  })}
+                  placeholder="Noida, Uttar Pradesh, India"
+                />
+              </div>
+              
+              <div>
+                <Label>Map Zoom Level (1-20)</Label>
+                <Input
+                  type="number"
+                  min="1"
+                  max="20"
+                  value={formData.map_location?.zoom || 12}
+                  onChange={(e) => setFormData({ 
+                    ...formData, 
+                    map_location: { ...formData.map_location, zoom: parseInt(e.target.value) } 
+                  })}
+                />
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              💡 Tip: Use <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:underline">Google Maps</a> to find latitude and longitude
+            </p>
           </div>
           
           <div className="border-t pt-6">

@@ -6,6 +6,13 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LiveChat from './components/LiveChat';
 import Home from './pages/Home';
+import AboutUs from './pages/AboutUs';
+import Services from './pages/Services';
+import ContactUs from './pages/ContactUs';
+import ProjectsResidential from './pages/ProjectsResidential';
+import ProjectsCommercial from './pages/ProjectsCommercial';
+import ProjectsOffice from './pages/ProjectsOffice';
+import ProjectsRetail from './pages/ProjectsRetail';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import HeroSlidesManagement from './pages/HeroSlidesManagement';
@@ -15,6 +22,7 @@ import ClientsManagement from './pages/ClientsManagement';
 import TestimonialsManagement from './pages/TestimonialsManagement';
 import ContactSubmissionsManagement from './pages/ContactSubmissionsManagement';
 import CompanyInfoManagement from './pages/CompanyInfoManagement';
+import PageContentManagement from './pages/PageContentManagement';
 import AdminLayout from './components/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
@@ -35,10 +43,14 @@ function App() {
                   <Navbar />
                   <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<Home />} />
+                    <Route path="/about" element={<AboutUs />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/contact" element={<ContactUs />} />
+                    <Route path="/projects/residential" element={<ProjectsResidential />} />
+                    <Route path="/projects/commercial" element={<ProjectsCommercial />} />
+                    <Route path="/projects/office" element={<ProjectsOffice />} />
+                    <Route path="/projects/retail" element={<ProjectsRetail />} />
                     <Route path="/projects" element={<Home />} />
-                    <Route path="/resources" element={<Home />} />
-                    <Route path="/contact" element={<Home />} />
                   </Routes>
                   <Footer />
                 </>
@@ -63,6 +75,7 @@ function App() {
               <Route path="testimonials" element={<TestimonialsManagement />} />
               <Route path="contacts" element={<ContactSubmissionsManagement />} />
               <Route path="company-info" element={<CompanyInfoManagement />} />
+              <Route path="pages" element={<PageContentManagement />} />
             </Route>
           </Routes>
         </div>
