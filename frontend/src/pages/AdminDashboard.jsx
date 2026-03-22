@@ -38,7 +38,8 @@ const AdminDashboard = () => {
     { icon: Users, label: 'Clients', path: '/admin/clients', count: stats?.clients, color: 'bg-yellow-500' },
     { icon: MessageSquare, label: 'Testimonials', path: '/admin/testimonials', count: stats?.testimonials, color: 'bg-pink-500' },
     { icon: Mail, label: 'Contact Submissions', path: '/admin/contacts', count: stats?.new_contacts, color: 'bg-red-500', badge: true },
-    { icon: Settings, label: 'Company Info', path: '/admin/company-info', color: 'bg-gray-500' }
+    { icon: Settings, label: 'Company Info', path: '/admin/company-info', color: 'bg-gray-500' },
+    { icon: LayoutDashboard, label: 'Page Content', path: '/admin/pages', color: 'bg-indigo-500' }
   ];
 
   if (loading) {
