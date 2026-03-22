@@ -119,11 +119,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Our Services</h3>
             <ul className="space-y-2">
-              <li className="text-gray-400 text-sm">Excavation Works</li>
-              <li className="text-gray-400 text-sm">Steel Structure Works</li>
-              <li className="text-gray-400 text-sm">RCC Works</li>
-              <li className="text-gray-400 text-sm">Industrial Sheds</li>
-              <li className="text-gray-400 text-sm">MEP Works</li>
+              <li className="text-gray-400 text-sm">Architectural Design</li>
+              <li className="text-gray-400 text-sm">Interior Design</li>
+              <li className="text-gray-400 text-sm">Turnkey Design & Build</li>
+              <li className="text-gray-400 text-sm">Renovation & Space Optimisation</li>
             </ul>
           </div>
 
@@ -134,13 +133,13 @@ const Footer = () => {
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="text-orange-500 mt-1 flex-shrink-0" />
                 <p className="text-gray-400 text-sm">
-                  Noida, Delhi, Gurugram, Lucknow, Jaipur
+                  Plot No.7 Lower Ground Floor Saidulajab Saket
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <Phone size={18} className="text-orange-500 flex-shrink-0" />
-                <a href="tel:+91-0120-2651155" className="text-gray-400 hover:text-orange-500 text-sm transition-colors">
-                  +91-0120-2651155
+                <a href="tel:+91-9873041716" className="text-gray-400 hover:text-orange-500 text-sm transition-colors">
+                  +91-9873041716
                 </a>
               </div>
               <div className="flex items-center gap-3">
