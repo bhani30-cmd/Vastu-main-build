@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { publicAPI } from '../services/api';
 import { Briefcase } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ProjectsOffice = () => {
   const [projects, setProjects] = useState([]);
@@ -12,20 +13,8 @@ const ProjectsOffice = () => {
 
   const fetchProjects = async () => {
     try {
-      // Fetch both Commercial and Industrial as they often include offices
-      const [commercialRes, institutionalRes] = await Promise.all([
-        publicAPI.getProjects('Commercial'),
-        publicAPI.getProjects('Institutional')
-      ]);
-      // Filter for office/workspace related projects
-      const allProjects = [...commercialRes.data, ...institutionalRes.data];
-      const officeProjects = allProjects.filter(p => 
-        p.title.toLowerCase().includes('office') || 
-        p.title.toLowerCase().includes('workspace') ||
-        p.title.toLowerCase().includes('it park') ||
-        p.description.toLowerCase().includes('office')
-      );
-      setProjects(officeProjects);
+      const response = await publicAPI.getProjects('Office');
+      setProjects(response.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -42,48 +31,52 @@ const ProjectsOffice = () => {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-20">
+    <div className="min-h-screen" data-testid="projects-office-page">
+      <div className="bg-gray-900 text-white py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center gap-4 mb-4">
-            <Briefcase size={48} />
-            <h1 className="text-5xl font-bold">Office & Workspace Projects</h1>
-          </div>
-          <p className="text-xl text-gray-300">
-            Designing productive work environments for modern businesses
+          <p className="text-orange-400 font-semibold tracking-widest uppercase text-sm mb-3">Projects</p>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
+            Office / <span className="text-orange-500">Workspace</span>
+          </h1>
+          <p className="text-base md:text-lg text-gray-300 max-w-2xl">
+            Modern office interiors, co-working spaces and corporate campuses designed for productivity.
           </p>
         </div>
       </div>
 
-      {/* Projects Grid */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         {projects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (
-              <div
+              <Link
                 key={project._id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
+                to={`/projects/${project._id}`}
+                className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all"
+                data-testid={`office-project-${project._id}`}
               >
-                <div className="h-64 overflow-hidden">
+                <div className="h-56 overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
                   />
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{project.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{project.description}</p>
-                  <p className="text-sm text-orange-500 font-semibold">Client: {project.client}</p>
+                <div className="p-5">
+                  <span className="text-orange-500 text-xs font-bold uppercase">{project.category}</span>
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-orange-500 transition-colors mt-1">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-2 line-clamp-2">{project.description}</p>
+                  <p className="text-xs text-gray-400 mt-3">Client: {project.client}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <Briefcase size={64} className="mx-auto text-gray-400 mb-4" />
-            <p className="text-xl text-gray-600">No office/workspace projects available at the moment.</p>
+          <div className="text-center py-20">
+            <Briefcase size={64} className="mx-auto text-gray-300 mb-4" />
+            <p className="text-xl text-gray-500">No office projects found.</p>
           </div>
         )}
       </div>

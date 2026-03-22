@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { publicAPI } from '../services/api';
 import { Building } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ProjectsCommercial = () => {
   const [projects, setProjects] = useState([]);
@@ -49,23 +50,26 @@ const ProjectsCommercial = () => {
         {projects.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (
-              <div
+              <Link
                 key={project._id}
+                to={`/projects/${project._id}`}
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
+                data-testid={`commercial-project-${project._id}`}
               >
                 <div className="h-64 overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    loading="lazy"
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{project.title}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-orange-500 transition-colors mb-2">{project.title}</h3>
                   <p className="text-sm text-gray-600 mb-3">{project.description}</p>
                   <p className="text-sm text-orange-500 font-semibold">Client: {project.client}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (

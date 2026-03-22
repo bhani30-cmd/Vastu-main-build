@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { publicAPI } from '../services/api';
 import { ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ProjectsRetail = () => {
   const [projects, setProjects] = useState([]);
@@ -12,16 +13,8 @@ const ProjectsRetail = () => {
 
   const fetchProjects = async () => {
     try {
-      // For now, filtering from Commercial category
-      const response = await publicAPI.getProjects('Commercial');
-      // Filter for retail-related projects
-      const retailProjects = response.data.filter(p => 
-        p.title.toLowerCase().includes('retail') || 
-        p.title.toLowerCase().includes('mall') ||
-        p.title.toLowerCase().includes('shopping') ||
-        p.description.toLowerCase().includes('retail')
-      );
-      setProjects(retailProjects);
+      const response = await publicAPI.getProjects('Retail');
+      setProjects(response.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -38,49 +31,52 @@ const ProjectsRetail = () => {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-20">
+    <div className="min-h-screen" data-testid="projects-retail-page">
+      <div className="bg-gray-900 text-white py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center gap-4 mb-4">
-            <ShoppingBag size={48} />
-            <h1 className="text-5xl font-bold">Retail Projects</h1>
-          </div>
-          <p className="text-xl text-gray-300">
-            Creating engaging retail spaces that drive business success
+          <p className="text-orange-400 font-semibold tracking-widest uppercase text-sm mb-3">Projects</p>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
+            <span className="text-orange-500">Retail</span> Spaces
+          </h1>
+          <p className="text-base md:text-lg text-gray-300 max-w-2xl">
+            Shopping malls, high-street retail, showrooms and brand fit-outs built for footfall and experience.
           </p>
         </div>
       </div>
 
-      {/* Projects Grid */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         {projects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (
-              <div
+              <Link
                 key={project._id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
+                to={`/projects/${project._id}`}
+                className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all"
+                data-testid={`retail-project-${project._id}`}
               >
-                <div className="h-64 overflow-hidden">
+                <div className="h-56 overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
                   />
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{project.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{project.description}</p>
-                  <p className="text-sm text-orange-500 font-semibold">Client: {project.client}</p>
+                <div className="p-5">
+                  <span className="text-orange-500 text-xs font-bold uppercase">{project.category}</span>
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-orange-500 transition-colors mt-1">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-2 line-clamp-2">{project.description}</p>
+                  <p className="text-xs text-gray-400 mt-3">Client: {project.client}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <ShoppingBag size={64} className="mx-auto text-gray-400 mb-4" />
-            <p className="text-xl text-gray-600">No retail projects available at the moment.</p>
-            <p className="text-sm text-gray-500 mt-2">Check back soon or contact us for information about our retail construction services.</p>
+          <div className="text-center py-20">
+            <ShoppingBag size={64} className="mx-auto text-gray-300 mb-4" />
+            <p className="text-xl text-gray-500">No retail projects found.</p>
           </div>
         )}
       </div>

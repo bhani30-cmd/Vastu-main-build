@@ -33,7 +33,7 @@ const ProjectsManagement = () => {
   const [uploading, setUploading] = useState(false);
   const [highlightInput, setHighlightInput] = useState('');
 
-  const categories = ['Industrial', 'Commercial', 'Institutional', 'Residential'];
+  const categories = ['Industrial', 'Commercial', 'Institutional', 'Residential', 'Office', 'Retail'];
 
   useEffect(() => {
     fetchProjects();
