@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { publicAPI } from '../services/api';
 import { CheckCircle, Compass, Paintbrush, Hammer, RefreshCw, Sun, Wind, LayoutPanelLeft, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
@@ -61,19 +60,8 @@ const Services = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchData();
+    setLoading(false);
   }, []);
-
-  const fetchData = async () => {
-    try {
-      const capRes = await publicAPI.getCapabilities();
-      setCapabilities(capRes.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setLoading(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -168,41 +156,6 @@ const Services = () => {
               })}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Construction Capabilities */}
-      <div className="max-w-7xl mx-auto px-4 py-16" data-testid="capabilities-grid">
-        <div className="text-center mb-12">
-          <p className="text-orange-500 font-semibold tracking-widest uppercase text-sm mb-2">Expertise</p>
-          <h2 className="text-3xl font-bold text-gray-900">Construction Capabilities</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {capabilities.map((cap) => (
-            <div
-              key={cap._id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
-              data-testid={`capability-card-${cap._id}`}
-            >
-              <div className="h-48 overflow-hidden">
-                <img
-                  src={cap.image}
-                  alt={cap.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  loading="lazy"
-                />
-              </div>
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <CheckCircle className="text-orange-500 flex-shrink-0" size={18} />
-                  {cap.title}
-                </h3>
-                {cap.description && (
-                  <p className="text-gray-600 text-sm mt-2 leading-relaxed">{cap.description}</p>
-                )}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 
