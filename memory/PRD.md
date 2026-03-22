@@ -51,7 +51,14 @@ Build a construction website replica of dynaconprojects.com using the company na
 - [x] Google Maps embed on Contact page
 - [x] PageContentManagement admin page
 - [x] Backend Pydantic v2 cleanup (.model_dump(), datetime.now(timezone.utc))
-- [x] Comprehensive testing: Backend 100% (27/27), Frontend 95%+
+- [x] **Project Gallery/Portfolio page** at /projects with:
+  - Category filtering (All, Industrial, Commercial, Institutional, Residential) with counts
+  - Grid view toggle (2/3 columns)
+  - Full-screen lightbox with keyboard navigation (Arrow keys, Escape)
+  - Project detail overlay on hover
+  - Category links section
+  - Updated Navbar dropdown with "All Projects" link
+- [x] Comprehensive testing: Backend 100% (27/27), Frontend 100% (all features)
 
 ## Backlog / Future Tasks
 - P1: Performance optimizations (lazy loading, image optimization)
