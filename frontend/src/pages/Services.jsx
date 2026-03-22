@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { publicAPI } from '../services/api';
 import { CheckCircle, Compass, Paintbrush, Hammer, RefreshCw, Sun, Wind, LayoutPanelLeft, MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 
 const services = [
@@ -57,6 +57,8 @@ const vastuPoints = [
 const Services = () => {
   const [capabilities, setCapabilities] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -209,11 +211,13 @@ const Services = () => {
         <div className="max-w-7xl mx-auto px-4 text-center text-white">
           <h2 className="text-3xl sm:text-4xl font-bold mb-3">Ready to Start Your Project?</h2>
           <p className="text-white/80 text-base md:text-lg mb-8">Get in touch with us for a consultation and quote</p>
-          <Link to="/contact">
-            <Button className="bg-white text-orange-500 hover:bg-gray-100 font-semibold px-8 py-3 text-base" data-testid="services-contact-cta">
-              Contact Us Today
-            </Button>
-          </Link>
+          <Button
+            onClick={() => navigate('/contact')}
+            className="bg-white text-orange-500 hover:bg-gray-100 font-semibold px-8 py-3 text-base"
+            data-testid="services-contact-cta"
+          >
+            Contact Us Today
+          </Button>
         </div>
       </div>
     </div>
