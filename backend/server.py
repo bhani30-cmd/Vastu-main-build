@@ -102,10 +102,12 @@ async def startup_event():
     logger.info("Starting Vastunirmana CMS API...")
     # Run database seeding
     try:
+        # Check if we can connect to MongoDB before seeding
+        await client.admin.command('ping')
         from seed_db import seed_database
         await seed_database()
     except Exception as e:
-        logger.error(f"Database seeding error: {e}")
+        logger.error(f"Database seeding error (skipped): {e}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
