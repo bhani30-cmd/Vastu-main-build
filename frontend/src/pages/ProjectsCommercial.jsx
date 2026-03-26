@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { publicAPI } from '../services/api';
 import { Building } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import * as mock from '../data/mockData';
 
 const ProjectsCommercial = () => {
   const [projects, setProjects] = useState([]);
@@ -21,8 +22,11 @@ const ProjectsCommercial = () => {
       setProjects(projRes.data);
       if (pageRes?.data) setPageContent(pageRes.data);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
+    } catch {
+      const data = mock.projects
+        .filter((p) => p.category === 'Commercial')
+        .map((p) => ({ ...p, _id: String(p.id) }));
+      setProjects(data);
       setLoading(false);
     }
   };

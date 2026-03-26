@@ -4,9 +4,9 @@ from datetime import datetime, timezone
 import os
 import asyncio
 
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+mongo_url = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
+client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=2000)
+db = client[os.environ.get("DB_NAME", "vastunirmana")]
 
 
 async def seed_database():

@@ -16,9 +16,10 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+mongo_url = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
+db_name = os.environ.get("DB_NAME", "vastunirmana")
+client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=2000)
+db = client[db_name]
 
 # Create the main app without a prefix
 app = FastAPI(title="Vastunirmana CMS API", version="1.0.0")
@@ -77,7 +78,7 @@ app.include_router(admin.router)
 app.include_router(api_router)
 
 # Mount uploads directory
-UPLOAD_DIR = Path("/app/backend/uploads")
+UPLOAD_DIR = ROOT_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 app.mount("/api/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 

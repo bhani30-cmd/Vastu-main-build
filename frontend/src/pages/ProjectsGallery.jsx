@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { publicAPI } from '../services/api';
 import { X, ChevronLeft, ChevronRight, Maximize2, Grid3X3, LayoutGrid, ExternalLink } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import * as mock from '../data/mockData';
 
 const ProjectsGallery = () => {
   const [projects, setProjects] = useState([]);
@@ -32,8 +33,12 @@ const ProjectsGallery = () => {
       setCategories(uniqueCats);
       if (pageRes?.data) setPageContent(pageRes.data);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
+    } catch {
+      const data = mock.projects.map((p) => ({ ...p, _id: String(p.id) }));
+      setProjects(data);
+      setFilteredProjects(data);
+      const uniqueCats = ['All', ...new Set(data.map(p => p.category))];
+      setCategories(uniqueCats);
       setLoading(false);
     }
   };

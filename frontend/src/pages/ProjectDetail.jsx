@@ -8,6 +8,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { toast } from 'sonner';
+import * as mock from '../data/mockData';
 
 const ProjectDetail = () => {
   const { projectId } = useParams();
@@ -30,8 +31,15 @@ const ProjectDetail = () => {
       const response = await publicAPI.getProjectById(projectId);
       setProject(response.data);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching project:', error);
+    } catch {
+      const all = mock.projects.map((p) => ({ ...p, _id: String(p.id) }));
+      const found = all.find((p) => p._id === projectId);
+      if (found) {
+        const related = all.filter((p) => p.category === found.category && p._id !== found._id).slice(0, 3);
+        setProject({ ...found, related_projects: related, gallery_images: found.gallery_images || [] });
+      } else {
+        setProject(null);
+      }
       setLoading(false);
     }
   };

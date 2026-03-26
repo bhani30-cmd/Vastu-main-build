@@ -25,8 +25,8 @@ const Footer = () => {
     try {
       const response = await publicAPI.getCompanyInfo();
       setCompanyInfo(response.data);
-    } catch (error) {
-      console.error('Error fetching company info:', error);
+    } catch {
+      setCompanyInfo(null);
     }
   };
 

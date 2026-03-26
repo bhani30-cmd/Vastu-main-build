@@ -17,6 +17,8 @@ import ProjectsGallery from './pages/ProjectsGallery';
 import ProjectDetail from './pages/ProjectDetail';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import ChangePassword from './pages/ChangePassword';
+import HomepageManagement from './pages/HomepageManagement';
 import HeroSlidesManagement from './pages/HeroSlidesManagement';
 import CapabilitiesManagement from './pages/CapabilitiesManagement';
 import ProjectsManagement from './pages/ProjectsManagement';
@@ -71,6 +73,8 @@ function App() {
               }
             >
               <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="change-password" element={<ChangePassword />} />
+              <Route path="homepage" element={<HomepageManagement />} />
               <Route path="hero-slides" element={<HeroSlidesManagement />} />
               <Route path="capabilities" element={<CapabilitiesManagement />} />
               <Route path="projects" element={<ProjectsManagement />} />

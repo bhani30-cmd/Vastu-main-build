@@ -15,8 +15,7 @@ const AboutUs = () => {
       const response = await publicAPI.getPageContent('about');
       setPageContent(response.data);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching page content:', error);
+    } catch {
       setLoading(false);
     }
   };

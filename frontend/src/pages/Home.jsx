@@ -3,6 +3,7 @@ import HeroSlider from '../components/HeroSlider';
 import SectionHeader from '../components/SectionHeader';
 import { publicAPI } from '../services/api';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import * as mock from '../data/mockData';
 
 const Home = () => {
   const [heroSlides, setHeroSlides] = useState([]);
@@ -10,6 +11,7 @@ const Home = () => {
   const [projects, setProjects] = useState([]);
   const [clients, setClients] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
+  const [homePage, setHomePage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -28,22 +30,28 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
-      const [slidesRes, capabilitiesRes, clientsRes, testimonialsRes] = await Promise.all([
+      const [slidesRes, capabilitiesRes, clientsRes, testimonialsRes, homeRes] = await Promise.all([
         publicAPI.getHeroSlides(),
         publicAPI.getCapabilities(),
         publicAPI.getClients(),
-        publicAPI.getTestimonials()
+        publicAPI.getTestimonials(),
+        publicAPI.getPageContent('home').catch(() => ({ data: null }))
       ]);
       
       setHeroSlides(slidesRes.data);
       setCapabilities(capabilitiesRes.data);
       setClients(clientsRes.data);
       setTestimonials(testimonialsRes.data);
+      setHomePage(homeRes.data);
       
       await fetchProjects('All');
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+    } catch {
+      setHeroSlides(mock.heroSlides.map((s) => ({ ...s, _id: String(s.id) })));
+      setCapabilities(mock.capabilities.map((c) => ({ ...c, _id: String(c.id) })));
+      setClients(mock.clients.map((c) => ({ ...c, _id: String(c.id) })));
+      setTestimonials(mock.testimonials.map((t) => ({ ...t, _id: String(t.id) })));
+      setProjects(mock.projects.map((p) => ({ ...p, _id: String(p.id) })));
       setLoading(false);
     }
   };
@@ -52,8 +60,13 @@ const Home = () => {
     try {
       const response = await publicAPI.getProjects(category === 'All' ? null : category);
       setProjects(response.data);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
+    } catch {
+      const all = mock.projects.map((p) => ({ ...p, _id: String(p.id) }));
+      if (category && category !== 'All') {
+        setProjects(all.filter((p) => p.category === category));
+        return;
+      }
+      setProjects(all);
     }
   };
 
@@ -84,6 +97,26 @@ const Home = () => {
     <div className="min-h-screen">
       {/* Hero Slider */}
       <HeroSlider slides={heroSlides} />
+
+      {/* Editable Homepage Content */}
+      {homePage && (
+        <section className="py-12 bg-white">
+          <div className="max-w-7xl mx-auto px-4">
+            {homePage.content?.hero_title || homePage.content?.hero_subtitle ? (
+              <SectionHeader
+                orangeText={homePage.content?.hero_title || ''}
+                regularText={homePage.content?.hero_subtitle || ''}
+              />
+            ) : null}
+            {homePage.content?.body && (
+              <div
+                className="prose max-w-none mt-8"
+                dangerouslySetInnerHTML={{ __html: homePage.content.body }}
+              />
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Corporate Overview Section */}
       <section className="bg-gray-900 py-20">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { publicAPI } from '../services/api';
 import { Briefcase } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import * as mock from '../data/mockData';
 
 const ProjectsOffice = () => {
   const [projects, setProjects] = useState([]);
@@ -21,8 +22,11 @@ const ProjectsOffice = () => {
       setProjects(projRes.data);
       if (pageRes?.data) setPageContent(pageRes.data);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
+    } catch {
+      const data = mock.projects
+        .filter((p) => p.category === 'Office')
+        .map((p) => ({ ...p, _id: String(p.id) }));
+      setProjects(data);
       setLoading(false);
     }
   };

@@ -1,6 +1,22 @@
 import axios from 'axios';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const fallbackBackendUrl = (() => {
+  if (typeof window === 'undefined') return '';
+
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  if (isLocalhost) return 'http://127.0.0.1:8001';
+
+  return window.location.origin;
+})();
+
+const normalizedEnvBackendUrl = (() => {
+  const raw = (process.env.REACT_APP_BACKEND_URL || '').trim();
+  if (!raw) return '';
+  if (raw === 'undefined' || raw === 'null') return '';
+  return raw;
+})();
+
+const BACKEND_URL = (normalizedEnvBackendUrl || fallbackBackendUrl).replace(/\/$/, '');
 const API_BASE = `${BACKEND_URL}/api`;
 
 const api = axios.create({

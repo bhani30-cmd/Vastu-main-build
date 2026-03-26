@@ -33,8 +33,9 @@ const ContactUs = () => {
       setPageContent(pageRes.data);
       setCompanyInfo(companyRes.data);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+    } catch {
+      setPageContent(null);
+      setCompanyInfo(null);
       setLoading(false);
     }
   };

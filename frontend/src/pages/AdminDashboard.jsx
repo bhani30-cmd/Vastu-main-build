@@ -32,8 +32,7 @@ const AdminDashboard = () => {
       const response = await adminAPI.getDashboardStats();
       setStats(response.data);
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching stats:', error);
+    } catch {
       setLoading(false);
     }
   };
@@ -46,7 +45,9 @@ const AdminDashboard = () => {
     { icon: MessageSquare, label: 'Testimonials', path: '/admin/testimonials', count: stats?.testimonials, color: 'bg-pink-500' },
     { icon: Mail, label: 'Contact Submissions', path: '/admin/contacts', count: stats?.new_contacts, color: 'bg-red-500', badge: true },
     { icon: Settings, label: 'Company Info', path: '/admin/company-info', color: 'bg-gray-500' },
-    { icon: LayoutDashboard, label: 'Page Content', path: '/admin/pages', color: 'bg-indigo-500' }
+    { icon: LayoutDashboard, label: 'Page Content', path: '/admin/pages', color: 'bg-indigo-500' },
+    { icon: Home, label: 'Homepage', path: '/admin/homepage', color: 'bg-teal-500' },
+    { icon: Lock, label: 'Change Password', path: '/admin/change-password', color: 'bg-orange-500' }
   ];
 
   if (loading) {
